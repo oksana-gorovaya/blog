@@ -1,11 +1,12 @@
+
 from django.views import generic
 
 from django.contrib.auth.forms import UserCreationForm
-
+from blog.models.CommentRepository import CommentRepository
 from blog.models.Paginator import Paginator
-from blog.models.Story import StoryForm
+from blog.models.forms.Story import StoryForm
 from blog.models.models import Post
-from blog.models.CommentForm import CommentForm
+from blog.models.forms.CommentModel import CommentModel
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -43,10 +44,6 @@ def show_story_form(request):
 def post_detail(request, slug):
     template_name = 'post_detail.html'
     post = get_object_or_404(Post, slug=slug)
-    new_comment = None
-
-    # add_comment(request, post)
-
 
     comments = post.comments.filter()
     paginator = Paginator(comments, 2)
@@ -55,19 +52,19 @@ def post_detail(request, slug):
     page_obj = paginator.get_page(page_number)
 
     return render(request, template_name, {
-        'post': post, 'comments': comments,
+        'post': post,
+        'comments': comments,
         'paginator': paginator,
         'page_obj': page_obj,
-        'new_comment': new_comment,
     })
 
 
-def add_comment(request):
-    comment_form = CommentForm(data=request.POST)
-    post = request.GET.get()
-    if comment_form.is_valid():
-        new_comment = comment_form.save(commit=False)
-        # new_comment.post = post
-        new_comment.save()
+def add_comment(request, slug):
+    parent_id = request.GET.get('comment_id')
+    comment_repository = CommentRepository(slug)
+    comment_model = CommentModel(data={'email':request.POST.get('email'), 'body':request.POST.get('body'), 'parent_id':request.POST.get('parent_id')})
+    if comment_model.is_valid():
+        comment_repository.save(comment_model, parent_id)
         return redirect('home')
-    return render(request, 'comment_form.html', {'comment_form': comment_form})
+    return render(request, 'comment_form.html', {'comment_form': comment_model})
+

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from mptt.models import MPTTModel, TreeForeignKey
 
 STATUS = (
     (0,"Draft"),
@@ -23,17 +23,16 @@ class Post(models.Model):
         return self.title
 
 
-class Comment(models.Model):
+class Comment(MPTTModel):
     post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='comments')
-    name = models.CharField(max_length=80)
     email = models.EmailField()
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 
-    class Meta:
-        ordering = ['created_on']
+    class MPTTMeta:
+        order_insertion_by = ['tree_id']
 
     def __str__(self):
-        return 'Comment {} by {}'.format(self.body, self.name)
+        return 'Comment {} by anonymouse'.format(self.body)
 
