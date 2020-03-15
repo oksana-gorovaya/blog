@@ -1,6 +1,5 @@
 class Page:
-    def __init__(self, records, number, total_pages):
-        self.records = records
+    def __init__(self, number, total_pages):
         self.number = int(number)
         self.total_pages = total_pages
 

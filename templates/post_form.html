@@ -1,4 +1,4 @@
-{% block sidebar %}
+{% block post_form %}
 
 <style>
     .card{
@@ -10,10 +10,10 @@
     <div class="card my-4">
         <h5 class="card-header">New Post</h5>
         <div class="card-body">
-            <p class="card-text"> Here's the area where you can speak up. Do on and tell us your story</p>
-            <a href="{% url 'show_story_form' %}" class="btn btn-primary">Tell a story &rarr;</a>
+            <p class="card-text"> Here's the area where you can speak up. Go on and tell us your story</p>
+            <a href="{% url 'create_post' %}" class="btn btn-primary">Tell a story &rarr;</a>
         </div>
     </div>
 </div>
 
-{% endblock sidebar %}
+{% endblock post_form %}

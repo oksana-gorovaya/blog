@@ -23,14 +23,14 @@
                     <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
 
                     <p class="card-text">{{post.content|slice:":200" }}</p>
-                    <a href="{% url 'post_detail' post.slug  %}" class="btn btn-primary">Read More &rarr;</a>
+                    <a href="{% url 'show_post_detail' post.slug  %}" class="btn btn-primary">Read More &rarr;</a>
                 </div>
 
             </div>
             {% endfor %}
         </div>
         {% if user.is_authenticated %}
-        {% block sidebar %} {% include 'sidebar.html' %} {% endblock sidebar %}
+        {% block post_form %} {% include 'post_form.html' %} {% endblock post_form %}
         {% endif %}
     </div>
 </div>

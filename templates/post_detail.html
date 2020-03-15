@@ -10,48 +10,55 @@
             </div>
             <a href="{% url 'add_comment' post.slug %}" class="btn btn-primary  btn-lg" target="popup">Leave a comment</a>
         </div>
+
         {% if user.is_authenticated %}
-            {% block sidebar %} {% include 'sidebar.html' %} {% endblock sidebar %}
+            {% block post_form %} {% include 'post_form.html' %} {% endblock post_form %}
         {% endif %}
 
         <div class="col-md-8 card mb-4  mt-3 ">
             <div class="card-body">
                 <h2>{{ comments.count }} comments</h2>
             </div>
+
             <ul class="root">
                 {% load mptt_tags %}
-                {% for comment,structure in comments|tree_info %}
-                    {% if structure.new_level %}<ul><li>{% else %}</li><li>{% endif %}
-                        <div class="comments" style="padding: 10px;">
-                            <p class="font-weight-bold">
-                                <span class=" text-muted font-weight-normal">
-                                    {{ comment.created_on }}
-                                    {{ comment.id }}
-                                </span>
-                            </p>
-                            {{ comment.body  | linebreaks }}
-
-                            <a href="{% url 'add_comment' post.slug %}?comment_id={{comment.id}}" class="btn btn-primary  btn-sm" target="popup">Reply</a>
-
-                        </div>
-
-                    {% for level in structure.closed_levels %}</li></ul>{% endfor %}
+                {% for tree in page_content %}
+                    {% for comment,structure in tree|tree_info %}
+                        {% if structure.new_level %}<ul><li>{% else %}</li><li>{% endif %}
+                            <div class="comments" style="padding: 10px;">
+                                <p class="font-weight-bold">
+                                    <span class=" text-muted font-weight-normal">
+                                        {{ comment.created_on }}
+                                    </span>
+                                </p>
+                                {{ comment.body  | linebreaks }}
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'add_comment' post.slug %}?comment_id={{comment.id}}"
+                                       class="btn btn-primary  btn-sm" target="popup">Reply</a>
+                                {% endif %}
+                            </div>
+                        {% for level in structure.closed_levels %}</li></ul>{% endfor %}
+                    {% endfor %}
                 {% endfor %}
+            </ul>
+
             <div class="pagination">
             <span class="step-links">
-                {% if page_obj.has_previous %}
+
+                {% if page.has_previous %}
                     <a href="?page=1">&laquo; first</a>
-                    <a href="{{ page_obj.previous_page_number }}">previous</a>
+                    <a href="?page={{ page.previous_page_number }}">previous</a>
                 {% endif %}
 
                 <span class="current">
-                    Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+                    Page {{ page.number }} of {{ pagination.num_pages }}.
                 </span>
 
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a href="?page={{ paginator.num_pages }}">last &raquo;</a>
+                {% if page.has_next %}
+                    <a href="?page={{ page.next_page_number }}">next</a>
+                    <a href="?page={{ pagination.num_pages }}">last &raquo;</a>
                 {% endif %}
+
             </span>
             </div>
         </div>

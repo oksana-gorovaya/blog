@@ -1,6 +1,5 @@
 from django.shortcuts import get_object_or_404
 
-from blog.models.Reply import Reply
 from blog.models.models import Post, Comment
 
 
@@ -17,5 +16,3 @@ class CommentRepository:
         new_comment.parent_id = parent_id
         Comment.objects.rebuild()
         new_comment.save()
-
-
