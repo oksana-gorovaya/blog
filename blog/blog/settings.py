@@ -1,7 +1,7 @@
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+TEMPLATES_DIR = os.path.join(BASE_DIR, '..', 'templates')
 
 SECRET_KEY = 'ke6ub(bykd%53tc2h6qy!$@iz$ftjk#aduv+k5kkziwcw%7!@#'
 
@@ -29,8 +29,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ROOT_URLCONF = 'composeexample.urls'
-ROOT_URLCONF = 'blog.views.urls'
+ROOT_URLCONF = 'blog.blog.urls'
 
 TEMPLATES = [
     {
@@ -48,7 +47,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'composeexample.wsgi.application'
+WSGI_APPLICATION = 'blog.blog.wsgi.application'
 
 DATABASES = {
     'default': {

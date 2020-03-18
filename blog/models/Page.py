@@ -14,4 +14,3 @@ class Page:
 
     def next_page_number(self):
         return self.number + 1
-

@@ -27,5 +27,3 @@ class Comment(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ['tree_id']
-
-

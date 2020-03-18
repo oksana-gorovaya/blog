@@ -2,6 +2,7 @@ from django.views import generic
 
 from django.contrib.auth.forms import UserCreationForm
 from blog.models.CommentRepository import CommentRepository
+from blog.models.PostRepository import PostRepository
 from blog.models.Pagination import Pagination
 from blog.models.forms.PostModel import PostModel
 from blog.models.models import Post
@@ -32,13 +33,11 @@ def signup(request):
 
 def create_post(request):
     post_form = PostModel(data=request.POST)
-
     if not post_form.is_valid():
         return render(request, 'post.html', {'post_form': post_form})
 
-    new_post = post_form.save(commit=False)
-    new_post.author = User.objects.filter(username=request.user).first()
-    new_post.save()
+    PostRepository(request).save()
+
     return redirect('home')
 
 
@@ -63,16 +62,11 @@ def show_post_detail(request, slug):
 
 
 def add_comment(request, slug):
-    parent_id = request.GET.get('comment_id')
-    comment_repository = CommentRepository(slug)
-    comment_model = CommentModel(data={
-        'email': request.POST.get('email'),
-        'body': request.POST.get('body'),
-        'parent_id': request.POST.get('parent_id')
-    })
+    comment_model = CommentModel(data=request.POST)
     if not comment_model.is_valid():
         return render(request, 'comment_form.html', {'comment_form': comment_model})
 
-    comment_repository.save(comment_model, parent_id)
+    CommentRepository(request, slug).save()
+
     return redirect('home')
 
